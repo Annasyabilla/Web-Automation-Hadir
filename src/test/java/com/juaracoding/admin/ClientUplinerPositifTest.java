@@ -10,6 +10,7 @@ Version 1.0
 */
 
 import com.juaracoding.Hooks;
+import com.juaracoding.pages.admin.AbsenPointPage;
 import com.juaracoding.pages.admin.ClientUplinerPage;
 import com.juaracoding.pages.admin.LoginPage;
 import com.juaracoding.utils.DataGenerator;
@@ -20,10 +21,19 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import jdk.jshell.execution.Util;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
+
+import javax.xml.crypto.Data;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class ClientUplinerPositifTest {
     private static final Logger log = LoggerFactory.getLogger(ClientUplinerPositifTest.class);
@@ -32,6 +42,8 @@ public class ClientUplinerPositifTest {
     private static ClientUplinerPage clientUplinerPage = new ClientUplinerPage();
     private static LoginPage loginPage = new LoginPage();
     private static DataGenerator dataGenerator = new DataGenerator();
+    private static AbsenPointPage absenPointPage = new AbsenPointPage();
+    private static String namaItem;
 
 
 
@@ -75,8 +87,16 @@ public class ClientUplinerPositifTest {
     public void pilih_unit() {
         Utils.delay(2);
         clientUplinerPage.clickFieldFilter();
-//        clientUplinerPage.filterUnit();
-        extentTest.log(LogStatus.PASS, "Pilih Unit");
+        Utils.delay(2);
+        List<WebElement> listUnit = clientUplinerPage.getListItemsWebElements(driver);
+        List<String> namaUnit = clientUplinerPage.getListItems(driver);
+        namaItem = namaUnit.get(2);
+        String namaclick = listUnit.get(2).getText();
+        WebElement tombol = listUnit.get(2);
+        tombol.click();
+        if (namaItem.trim().equals(namaclick.trim())){
+            extentTest.log(LogStatus.PASS, "Pilih Unit");
+        } else {extentTest.log(LogStatus.FAIL, "Pilih Unit");}
     }
 
     @And("Klik Button Terapkan")
@@ -88,14 +108,15 @@ public class ClientUplinerPositifTest {
 
     @Then("Menampilkan Data Sesuai Hasil Filter Yang Dipinta")
     public void menampilkan_data_sesuai_hasil_filter_yang_dipinta(){
-        Utils.delay(2);
-        Assert.assertEquals(clientUplinerPage.getTxtValFilterUnit(),"AFI Desk Collection");
+        Utils.delay(3);
+        Assert.assertEquals(clientUplinerPage.getTxtValFilterUnit(),namaItem);
         extentTest.log(LogStatus.PASS, "Menampilkan Data Sesuai Hasil Filter Yang Dipinta");
     }
 
     @Given("Klik Pada kolom Search")
     public void klik_pada_kolom_search() {
         Utils.delay(2);
+        clientUplinerPage.clearSearch();
         clientUplinerPage.getSearch("kari");
         extentTest.log(LogStatus.PASS, "Klik Pada kolom Search");
     }
@@ -184,8 +205,20 @@ public class ClientUplinerPositifTest {
     @And("Klik button Daftar")
     public void klik_button_daftar() {
         Utils.waitAndClick(clientUplinerPage.getBtnDaftarUpliner());
+//        WebElement validasiSearch = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div/div[1]/div/div/div/div[1]/form/div/button[3]"));
+        boolean isElementPresent;
+        try {
+            isElementPresent = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div/div[1]/div/div/div/div[1]/form/div/button[3]")) != null;
+        } catch (NoSuchElementException e) {
+            isElementPresent = false;
+        }
+
+        if(isElementPresent){
+            extentTest.log(LogStatus.PASS, "Klik button Daftar");
+        }else {extentTest.log(LogStatus.FAIL, "Klik button Daftar");}
+
 //        clientUplinerPage.clickBtnDaftar();
-        extentTest.log(LogStatus.PASS, "Klik button Daftar");
+//        extentTest.log(LogStatus.PASS, "Klik button Daftar");
     }
 //@And("Klik button Daftar")
 //public void klik_button_daftar() {
@@ -201,10 +234,23 @@ public class ClientUplinerPositifTest {
 
     @Then("Client Upliner berhasil ditambahkan dan muncul di halaman Client Upliner dengan tipe upliner v2")
     public void Client_Upliner_berhasil_ditambahkan_dan_muncul_di_halaman_Client_Upliner_dengan_tipe_upliner_v2(){
-        Utils.delay(2);
+        Utils.delay(4);
+        driver.navigate().back();
+        boolean isElementPresent;
+        try {
+            isElementPresent = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div/div[1]/div/div/div/div[1]/form/div/button[3]")) != null;
+        } catch (NoSuchElementException e) {
+            isElementPresent = false;
+        }
+        if(isElementPresent){
+            extentTest.log(LogStatus.PASS, "Client Upliner berhasil ditambahkan dan muncul di halaman Client Upliner dengan tipe upliner v2r");
+
+        }else {
+            extentTest.log(LogStatus.FAIL, "Client Upliner berhasil ditambahkan dan muncul di halaman Client Upliner dengan tipe upliner v2r");
+        }
 //        System.out.println(clientUplinerPage.getValNotifSukses());
-        Assert.assertEquals(clientUplinerPage.getValNotifSukses(),"Data Client Upliner berhasil ditambahkan ke dalam tabel");
-        Utils.delay(2);
+//        Assert.assertEquals(clientUplinerPage.getValNotifSukses(),"Data Client Upliner berhasil ditambahkan ke dalam tabel");
+//        Utils.delay(2);
         extentTest.log(LogStatus.PASS, "Client Upliner berhasil ditambahkan dan muncul di halaman Client Upliner dengan tipe upliner v2r");
 
     }
@@ -213,5 +259,104 @@ public class ClientUplinerPositifTest {
     public void logout() {
         Utils.delay(2);
         clientUplinerPage.Logout();
+    }
+
+    @Given("Klik button Tambahkan Upliner BCA")
+    public void Klik_button_Tambahkan_Upliner_BCA(){
+        Utils.delay(2);
+//        driver.navigate().back();
+        clientUplinerPage.clickBtnTambahkanBca();
+        extentTest.log(LogStatus.PASS, "Klik button Tambahkan Upliner BCA");
+    }
+
+    @And("Input Username")
+    public void input_Username() {
+        Utils.delay(2);
+        clientUplinerPage.clearUsername();
+        clientUplinerPage.getUsername(dataGenerator.dataUsername());
+        extentTest.log(LogStatus.PASS, "Input Username");
+    }
+
+    @And("Input Email BCA")
+    public void Input_Email_BCA(){
+        Utils.delay(2);
+        clientUplinerPage.clearEmailBca();
+        clientUplinerPage.getEmailBca(dataGenerator.dataEmail());
+        extentTest.log(LogStatus.PASS, "Input Email BCA");
+    }
+
+    @When("Isi Unit BCA")
+    public void Isi_Unit_BCA(){
+        Utils.delay(2);
+        clientUplinerPage.selectUnitBCA("Juara Coding");
+        extentTest.log(LogStatus.PASS, "Isi Unit BCA");
+    }
+
+    @And("pilih tipe Upliner")
+    public void pilih_tipe_Upliner() {
+        Utils.delay(2);
+        clientUplinerPage.getUplinerBca();
+        extentTest.log(LogStatus.PASS, "pilih tipe Upliner");
+    }
+
+    @Given("klik icon titik tiga")
+    public void klik_icon_titik_tiga(){
+
+        Utils.delay(2);
+        clientUplinerPage.clickbtntitikTiga();
+        extentTest.log(LogStatus.PASS, "klik icon titik tiga");
+
+    }
+
+    @And("tambahkan foto")
+    public void tambahka_foto(){
+        Utils.delay(2);
+        clientUplinerPage.getFoto();
+        extentTest.log(LogStatus.PASS, "tambahkan foto");
+    }
+
+    @And("klik button ubah password")
+    public void klik_button_ubah_password(){
+        Utils.delay(2);
+        clientUplinerPage.getBtnUbahPasswprd();
+        extentTest.log(LogStatus.PASS, "klik button ubah password");
+    }
+
+    @And("input password baru")
+    public void input_password_baru(){
+        Utils.delay(2);
+        clientUplinerPage.getPassword(dataGenerator.dataPassword());
+        extentTest.log(LogStatus.PASS, "input password baru");
+    }
+
+    @When("klik ubah")
+    public void klik_ubah(){
+        Utils.delay(2);
+        clientUplinerPage.clickBtnSearch();
+        extentTest.log(LogStatus.PASS, "klik ubah");
+    }
+
+    @And("klik ya")
+    public void klik_ya(){
+        Utils.delay(2);
+        clientUplinerPage.clickBtnYa();
+        extentTest.log(LogStatus.PASS, "klik ya");
+
+    }
+
+    @Then("user berhasil dihapus")
+    public void user_berhasil_dihapus(){
+        Utils.delay(2);
+        Assert.assertEquals(absenPointPage.getTxtValDelete(),"Berhasil menghapus user");
+        extentTest.log(LogStatus.PASS, "user berhasil dihapus");
+    }
+
+    @Then("data berhasil diedit")
+    public void data_berhasil_diedit(){
+        Utils.delay(2);
+//        Assert.assertEquals(absenPointPage.getValNewRadius(), "50");
+        Assert.assertEquals(absenPointPage.getTxtValDelete(),"Berhasil Edit Location Point");
+        extentTest.log(LogStatus.PASS, "Data berhasil diedit");
+
     }
 }

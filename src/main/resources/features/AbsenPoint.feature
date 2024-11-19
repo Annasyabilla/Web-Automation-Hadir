@@ -16,11 +16,11 @@ Feature: Absen Point
     And Klik Button Search
     Then Tidak ada hasil pencarian yang ditampilkan pada tabel
 
-    Scenario: Melakukan pencarian menggunakan description
-      Given Klik Reset
-      When Ketik description
-      And Klik Button Search
-      Then Tidak ada hasil pencarian yang ditampilkan pada tabel
+  Scenario: Melakukan pencarian menggunakan description
+    Given Klik Reset
+    When Ketik description
+    And Klik Button Search
+    Then Tidak ada hasil pencarian yang ditampilkan pada tabel
 
   Scenario: Menambahkan tabel absen point dengan data valid
     Given Klik button Tambahkan
@@ -76,21 +76,28 @@ Feature: Absen Point
     Then Validasi error memunculkan pesan Please fill out this field
 
   Scenario: Verifikasi button Batal
-  Given klik button Batal
-  Then keluar dari halaman form
+    Given klik button Batal
+    Then keluar dari halaman form
 
   Scenario: Melakukan edit pada data absen point
-    Given Klik icon titik tiga
+    Given Klik Pada kolom Search
+    And Klik Button Search
+    And Klik icon titik tiga edit
     When pilih edit
     And input data absen point baru
     And klik simpan
+    And Klik Pada kolom Search
+    And Klik Button Search
+    Then Data berhasil diedit
 
-    Scenario:Menghapus data absen point
-      Given Klik icon titik tiga
-      When pilih delete
-      And klik Ya
-      Then Data berhasil dihapus
+  Scenario:Menghapus data absen point
+    Given Klik Reset
+    And Klik icon titik tiga
+    When pilih delete
+    And klik Ya
+    Then Data berhasil dihapus
+    And logout
 
-  Scenario: logout
-    Given logout
+#  Scenario: logout
+#    Given logout
 

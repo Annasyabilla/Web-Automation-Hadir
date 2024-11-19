@@ -5,7 +5,7 @@ import io.cucumber.testng.CucumberOptions;
 
 
 @CucumberOptions(features = {
-//        "src/main/resources/features/ClientUpliner.feature",
+        "src/main/resources/features/ClientUpliner.feature",
         "src/main/resources/features/AbsenPoint.feature"
         },
         glue = "com.juaracoding",

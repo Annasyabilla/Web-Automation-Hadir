@@ -116,5 +116,30 @@ public class ClientUplinerNegatifTest {
         Utils.delay(3);
         clientUplinerPage.clearPassword();
         clientUplinerPage.getPassword("a");
+        extentTest.log(LogStatus.PASS, "input 1 huruf pada password");
+    }
+
+    @Then("Validasi error menampilkan Please fill out this field")
+    public void Validasi_error_menampilkan_Please_fill_out_this_field(){
+        Utils.delay(3);
+        Assert.assertEquals(clientUplinerPage.getValNullPWBCA(),"true");
+        extentTest.log(LogStatus.PASS, "Validasi error menampilkan Please fill out this field");
+    }
+
+    @Then("muncul validasi sesuai keterangan")
+    public void muncul_validasi_sesuai_keterangan(){
+        Utils.delay(3);
+        Assert.assertEquals(clientUplinerPage.getTxtNullName(),"Nama minimal 2 karakter");
+        Assert.assertEquals(clientUplinerPage.getTxtNullUsername(),"Username minimal 2 karakter");
+        Assert.assertEquals(clientUplinerPage.getTxtNullUnit(),"Unit Harus Dipilih!");
+        Assert.assertEquals(clientUplinerPage.getTxtNullUpliner(),"Tipe Upliner Harus Dipilih!");
+        extentTest.log(LogStatus.PASS, "muncul validasi sesuai keterangan");
+    }
+
+    @And("Klik button daftar")
+    public void Klik_button_daftar(){
+        Utils.delay(3);
+        clientUplinerPage.clickBtnDaftar();
+        extentTest.log(LogStatus.PASS, "Klik button daftar");
     }
 }

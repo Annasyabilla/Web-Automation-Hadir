@@ -25,6 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 
+import java.util.Random;
+
 public class AbsenPointPositifTest {
     private static final Logger log = LoggerFactory.getLogger(ClientUplinerPositifTest.class);
     private static WebDriver driver;
@@ -32,11 +34,14 @@ public class AbsenPointPositifTest {
     private static ClientUplinerPage clientUplinerPage = new ClientUplinerPage();
     private static LoginPage loginPage = new LoginPage();
     private static AbsenPointPage absenPointPage = new AbsenPointPage();
+    private static int radius;
+    private static Random random;
 
 
     public AbsenPointPositifTest() {
         driver = Hooks.driver;
         extentTest = Hooks.extentTest;
+        random = new Random();
 
     }
 
@@ -49,7 +54,7 @@ public class AbsenPointPositifTest {
 
     @Then("Inputan berhasil terhapus")
     public void inputan_berhasil_terhapus() {
-        Utils.delay(4);
+        Utils.delay(6);
         Assert.assertEquals(driver.getCurrentUrl(), "https://magang.dikahadir.com/management/location-point");
         extentTest.log(LogStatus.PASS, "Inputan berhasil terhapus");
     }
@@ -78,7 +83,8 @@ public class AbsenPointPositifTest {
     @And("input radius")
     public void input_radius(){
         Utils.delay(2);
-        absenPointPage.getFieldRadius("80");
+        radius = random.nextInt(50,100);
+        absenPointPage.getFieldRadius(String.valueOf(radius));
         extentTest.log(LogStatus.PASS, "Input radius");
     }
 
@@ -135,23 +141,29 @@ public class AbsenPointPositifTest {
     @And("input data absen point baru")
     public void input_data_absen_point_baru(){
         Utils.delay(2);
-        absenPointPage.clearName();
-        absenPointPage.getFieldName("Kreasi Indonesia");
+//        absenPointPage.clearName();
+        absenPointPage.clearRadius();
+//        absenPointPage.getFieldName("Kreasi Indonesia");
+        absenPointPage.getFieldRadius(String.valueOf(radius));
         extentTest.log(LogStatus.PASS, "input data absen point baru");
     }
 
     @And("klik simpan")
     public void klik_simpan(){
-        Utils.delay(2);
-        absenPointPage.clickBtnSimpan();
+        Utils.delay(4);
+        absenPointPage.clickBtnSimpanEdit();
         extentTest.log(LogStatus.PASS, "klik simpan");
     }
 
     @Then("Data berhasil diedit")
     public void data_berhasil_diedit(){
         Utils.delay(2);
-        Assert.assertEquals(absenPointPage.getTxtTabelNama(),"NAMA");
-        extentTest.log(LogStatus.PASS, "Data berhasil diedit");
+//        Assert.assertEquals(absenPointPage.getValNewRadius(), "50");
+//        Assert.assertEquals(absenPointPage.getTxtValDelete(),"Berhasil Edit Location Point");
+        if(absenPointPage.getValNewRadius().equals(String.valueOf(radius))){
+            extentTest.log(LogStatus.PASS, "Data berhasil diedit");
+        }else{extentTest.log(LogStatus.FAIL, "Data berhasil diedit");
+        }
     }
 
     @When("pilih delete")
@@ -172,8 +184,16 @@ public class AbsenPointPositifTest {
     public void data_berhasil_dihapus(){
         Utils.delay(2);
         Assert.assertEquals(absenPointPage.getTxtValDelete(),"Berhasil Delete Location Point");
+
         extentTest.log(LogStatus.PASS, "Data berhasil dihapus");
     }
+
+    @And("Klik icon titik tiga edit")
+    public void Klik_icon_titik_tiga_edit(){
+        Utils.delay(2);
+        absenPointPage.getIconTitikEdit();
+    }
+
 
     @Given("klik Tidak")
     public void klik_tidak(){

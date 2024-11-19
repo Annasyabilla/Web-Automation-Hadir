@@ -10,6 +10,7 @@ Version 1.0
 */
 
 import com.juaracoding.drivers.DriverSingleton;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -126,10 +127,16 @@ public class AbsenPointPage {
     }
 
 
-    @FindBy(xpath = "//*[@id=\"__next\"]/div/div[2]/div/div[1]/div/div/div/div[2]/div/table/tbody/tr[1]/td[6]/div/div/button")
+    @FindBy(xpath = "/html/body/div[1]/div/div[2]/div/div[1]/div/div/div/div[2]/div/table/tbody/tr[1]/td[6]/div/div/button")
     private WebElement IconTitikTiga;
     public void getIconTitikTiga(){
         IconTitikTiga.click();
+    }
+
+    @FindBy(xpath = "/html/body/div[1]/div/div[2]/div/div[1]/div/div/div/div[2]/div/table/tbody/tr/td[6]/div/div/button")
+    private WebElement IconTitikEdit;
+    public void getIconTitikEdit(){
+        IconTitikEdit.click();
     }
 
     @FindBy(xpath = "//*[@id=\"card-actions-menu\"]/div[3]/ul/li[1]")
@@ -142,6 +149,12 @@ public class AbsenPointPage {
     private WebElement btnSimpan;
     public void clickBtnSimpan(){
         btnSimpan.click();
+    }
+
+    @FindBy(xpath = "//button[normalize-space()='Simpan']")
+    private WebElement btnSimpanEdit;
+    public void clickBtnSimpanEdit(){
+        btnSimpanEdit.click();
     }
 
     @FindBy(xpath = " //*[@id=\"card-actions-menu\"]/div[3]/ul/li[2]")
@@ -166,6 +179,12 @@ public class AbsenPointPage {
     private WebElement btnTidak;
     public void clickBtnTidak(){
         btnTidak.click();
+    }
+
+    @FindBy(xpath = "//*[@id=\"__next\"]/div/div[2]/div/div[1]/div/div/div/div[2]/div/table/tbody/tr/td[4]")
+    private WebElement valNewRadius;
+    public String getValNewRadius(){
+        return valNewRadius.findElement(By.tagName("h6")).getText();
     }
 
 
